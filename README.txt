@@ -29,7 +29,6 @@ Using kipy:
 2) cd to your KiCad project directory.
 3) xxxxx/xxxx/kipy/tools/checkproj.py -- to check your project
 4) xxxxx/xxxx/kipy/tools/expressdump.py -- dumps netlist in ExpressPCB format
-5) xxxxx/xxxx/kipy/tools/expressdump.py -- dumps netlist in ExpressPCB format
-6) xxxxx/xxxx/kipy/tools/getpins.py <refid>  -- print pin info for <refid>
-7) xxxxx/xxxx/kipy/tools/demos.py  -- checks whole demo tree
-8) xxxxx/xxxx/kipy/tools/roundtrip.py -- tests roundtripping library and demo tree
+5) xxxxx/xxxx/kipy/tools/getpins.py <refid>  -- print pin info for <refid>
+6) xxxxx/xxxx/kipy/tools/demos.py  -- checks whole demo tree
+7) xxxxx/xxxx/kipy/tools/roundtrip.py -- tests roundtripping library and demo tree
