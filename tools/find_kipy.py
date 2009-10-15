@@ -12,10 +12,15 @@ import sys
 import os
 
 myname = __name__[5:]   # remove 'find_'
+myname = os.path.join(myname, '__init__.py')
 
-def trypath(startpath):
-    parts = os.path.abspath(startpath).rsplit(myname, 2)
-    return len(parts) == 3 and parts[0] or None
+def trypath(newpath):
+    path = None
+    while path != newpath:
+        path = newpath
+        if os.path.exists(os.path.join(path, myname)):
+            return path
+        newpath = os.path.dirname(path)
 
 root = trypath(__file__) or trypath(os.path.realpath(__file__))
 

@@ -189,7 +189,5 @@ class CreatePartialNets(object):
                           self.Pin, self.Connection, self.SLabel):
             objset = self.byclass.get(classtype, [])
             while objset:
-                # Pick a random object out of the set, but don't really remove it
-                obj = objset.pop()
-                objset.add(obj)
-                self.makepartial(obj)
+                # Pick a starting object in the set at random
+                self.makepartial(iter(objset).next())

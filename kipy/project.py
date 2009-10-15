@@ -3,6 +3,8 @@ from .fileobjs.paths import kicad_default_project
 from .utility import FileAccess
 
 class Project(object):
+    '''  Collect all the information together about a schematic project
+    '''
 
     def __init__(self, projdir):
         projdir = FileAccess(projdir)

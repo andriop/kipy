@@ -1,5 +1,8 @@
 from .schitem import SchItem
-
+'''
+Classes based on SchItem for parsing and rendering $Comp components
+inside a .sch file.
+'''
 class Component(SchItem):
     keyword = '$Comp'
     _by_keyword = {}

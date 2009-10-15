@@ -114,6 +114,8 @@ class LibComponent(object):
         return '\n'.join(lines)
 
     def boundary(self, subpart=1, variant=1):
+        ''' Return a bounding rectangle for the part (except the pins)
+        '''
         dictindex = subpart, variant
         if dictindex not in self._boundaries:
             xlist, ylist = [], []

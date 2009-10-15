@@ -55,6 +55,10 @@ class LibDraw(object):
 
     @classmethod
     def _classinit(cls, base):
+        ''' Put subclasses for all the file types into our
+            dispatch directory, and save information about
+            the class members from the doc string.
+        '''
         if base is None:
             return
         docstr = cls.__doc__

@@ -1,3 +1,17 @@
+'''
+
+The classes in this module inherit from SchItem.  If this module
+is imported, then the SchItem metaclass will wire these classes into
+the SchItem class for dispatch.  It will also make, e.g.,
+SchItem.Label reference the Label class and SchItem.Text reference
+the Text class, etc.
+
+The only classes which are directly invoked from the dispatcher
+are Text and Sheet.  Instantiations of Labels are made from the
+initialization code for the Text and Sheet classes.
+
+'''
+
 import copy
 from .schitems import SchItem
 
@@ -6,6 +20,8 @@ class Label(SchItem, SchItem.PinOrLabel):
     reverse_order = False
 
     def unpack_netid(self, netid):
+        ''' Figure out bus naming information
+        '''
         if not netid.endswith(']'):
             self.net_ids = (netid,)
             return
@@ -44,6 +60,9 @@ class Label(SchItem, SchItem.PinOrLabel):
         self.unpack_netid(netid)
 
     def fracture(self):
+        ''' Convert a single label into multiple labels, one
+            for each bus wire.
+        '''
         net_ids = self.net_ids
         if len(net_ids) == 1:
             return self
@@ -72,6 +91,8 @@ class SLabel(Label):
     pass
 
 class Text(SchItem):
+    ''' Dispatcher for .sch file Text entries
+    '''
     @staticmethod
     def makekeepout(userinfo, item, page):
         orientation = item.orientation
@@ -112,6 +133,8 @@ class Text(SchItem):
 
 
 class Sheet(SchItem, SchItem.Keepout):
+    ''' Dispatcher for .sch file Sheet entries
+    '''
 
     def __init__(self, sheet, page):
         sheetname = self.normalize_name('Sheet', sheet.fields[0].name)

@@ -3,6 +3,9 @@ from kipy.fileobjs.paths import kicad_root
 from kipy.utility import FileAccess
 
 class LibDict(dict):
+    ''' Find all the libraries, and make a dictionary which
+        contains all the components.
+    '''
 
     def findlibs(self, cfgfile, projdir):
         if projdir is not None:

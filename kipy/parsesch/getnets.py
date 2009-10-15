@@ -1,3 +1,16 @@
+'''
+
+This module exports one function, makenetlist, which returns a netlist
+representation, when given a list of partial nets from the graphic submodule.
+
+Internally, the NetInfo class is used to group all the functions of generating
+the netlist together.  It uses makenetgroups.makegroups to do the initial
+grouping of the partial nets, and then handles globals, similar names,
+invisible pins, etc.
+
+
+'''
+
 import re
 from collections import defaultdict
 from .makenetgroups import makegroups
@@ -9,19 +22,25 @@ class NetInfo(object):
 
     @staticmethod
     def sortnames(names):
-        names = sorted(((x.count('/'), x) for x in names))
-        return tuple((x[1] for x in names))
-
-    def selectshortest(self, names):
-        return self.sortnames(names)[0]
+        ''' Sort names higher in the hierarchy before lower names.
+        '''
+        return sorted(names, key= lambda x:(x.count('/'), x))
 
     @staticmethod
     def getshortname(net_id):
         return net_id.rsplit('/',1)[-1]
 
-
     def canonicalize(self,
                 id_pattern = re.compile('([a-zA-Z]+|[0-9]+|\+| \/ )')):
+        ''' Convert all net names into canonical versions:
+                1) uppercase all letters
+                2) remove leading zeros from numerical portions
+                3) convert all non-alphanumeric characters except '+'
+                    into underscores
+                4) convert all separators ' / ' into '/'
+                5) Warn about any changes that result in two
+                    previously different names being made the same.
+        '''
 
         def canonical(s):
             def id_parts(s):
@@ -84,14 +103,14 @@ class NetInfo(object):
 
 
     def find_nettypes(self):
+        ''' Determine the type of net for every NetId
+        '''
         def _assert(what, message):
             if not what:
                     self.warn(message, net_id)
 
-        self.implicitglobals = set()
-        self.explicitglobals = set()
-        self.singlepage = set()
-        self.hierarchical = set()
+        implicitglobals = set()
+        explicitglobals = set()
 
         for net_id in self.by_net_id:
             pins = net_id.find_pins
@@ -101,25 +120,25 @@ class NetInfo(object):
             labels = net_id.find_labels
 
             if pins:
-                self.implicitglobals.add(net_id)
+                implicitglobals.add(net_id)
                 _assert(not (labels or slabels or hlabels), 'Local sheet signal connected automatically to global')
                 _assert(not glabels, 'Global signal used both implicitly and explicitly')
             elif slabels:
-                self.hierarchical.add(net_id)
                 _assert(not glabels, 'Global label misused as hierarchical')
                 _assert(len(slabels) <= 1, 'Multiple connections to label on instantiating sheet')
                 _assert(len(hlabels) + len(glabels) <= 1, 'Multiple entry points onto sheet for hierarchical label')
             elif hlabels:
-                self.hierarchical.add(net_id)
                 _assert(0, 'Hierarchical label not connected in instantiating sheet')
             elif glabels:
-                self.explicitglobals.add(net_id)
+                explicitglobals.add(net_id)
                 _assert(len(glabels) <= 1, 'Multiple connections to global signal on sheet')
-            else:
-                self.singlepage.add(net_id)
+
+        return implicitglobals, explicitglobals
 
 
     def connect_globals(self):
+        ''' Connect the globals together across sheets
+        ''' 
         globaldict = {}
 
         def merged(srcset):
@@ -130,8 +149,9 @@ class NetInfo(object):
                 globalnet.merge(item)
             return result
 
-        implicit = merged(self.implicitglobals)
-        explicit = merged(self.explicitglobals)
+        implicit, explicit = self.find_nettypes()
+        implicit = merged(implicit)
+        explicit = merged(explicit)
 
         for net_id, old_ids in explicit.iteritems():
             if len(old_ids) == 1:
@@ -146,8 +166,9 @@ class NetInfo(object):
 
 
     def shorten_names(self):
+        ''' Strip the hierarchy off the front of names where possible
+        '''
         getshortname = self.getshortname
-        selectshortest = self.selectshortest
         by_net_id = self.by_net_id
         shortnames = defaultdict(set)
         for net_ids in self.allgroups:
@@ -170,8 +191,13 @@ class NetInfo(object):
                     '; '.join(sorted((x[1] for x in groups))))
 
     def namegroups(self):
+        ''' Store the names associated with each group inside it.
+        '''
         getshortname = self.getshortname
-        selectshortest = self.selectshortest
+
+        def selectshortest(names):
+            return self.sortnames(names)[0]
+
 
         for group in self.allgroups:
             if group:
@@ -183,11 +209,14 @@ class NetInfo(object):
                 names = self.sortnames(names)
                 if len(names) > 1:
                     self.warn('Aliased net names:', str(names))
-                group.names = names
+                group.names = tuple(names)
             else:
                 group.names = ()
 
     def find_pins(self):
+        ''' Rummage through the group items and pull the pins out
+            into a separate set.
+        '''
         goodgroups = []
         self.allgroups, oldgroups = goodgroups, self.allgroups
         for group in oldgroups:
@@ -242,6 +271,9 @@ class NetInfo(object):
             pin.group.pins.remove(pin)
 
     def check_aliased_pins(self):
+        ''' For parts with multiple sub-parts and invisible shared pins,
+            consolidate the shared pins.
+        '''
         partdict = defaultdict(dict)
         for group in self.allgroups:
             for pin in group.pins:
@@ -260,7 +292,6 @@ class NetInfo(object):
         self.allpartials = allpartials
         self.by_net_id, self.allgroups = makegroups(allpartials)
         self.canonicalize()
-        self.find_nettypes()
         self.connect_globals()
         self.shorten_names()
         self.namegroups()
@@ -280,4 +311,3 @@ def makenetlist(allpartials, warnings):
     mylist = NetInfo(allpartials, warnings).getinfo()
     mylist = [OneNet(*x) for x in mylist]
     return mylist
- 

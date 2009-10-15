@@ -1,3 +1,16 @@
+'''
+Dumps a netlist in ExpressPCB format.
+
+Currently contains a hack for 96 pin EuroDIN connector.
+
+Since ExpressPCB doesn't allow letters in pin numbers,
+converts to 1-96 from A1-32 - C1-32.
+
+Also stores the number of pins on the net in the netname.
+This makes it easier to visually determine you have seen
+all the nets when you are using ExpressPCB.
+
+'''
 
 format = '''
 "ExpressPCB Netlist"

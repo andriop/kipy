@@ -1,3 +1,7 @@
+'''
+Classes based on SchItem for parsing and rendering $Sheet sub-sheets
+inside a .sch file.
+'''
 from .schitem import SchItem
 
 class Sheet(SchItem):

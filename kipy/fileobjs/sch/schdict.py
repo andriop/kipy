@@ -1,5 +1,12 @@
 from .schfile import SchFile
+'''
+Given a top schematic file name, SchDict will
+read all the schematics and put them in a dictionary.
 
+If they are instantiated multiple times, they will only
+be read/parsed once, but each instantiation will have its
+own dictionary entry with its own timestamp and parent.
+'''
 
 class SheetInstantiation(object):
     def __init__(self, database, sheetname, sheetfile, timestamp='', parent=None, antecedents=set()):

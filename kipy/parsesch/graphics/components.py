@@ -1,3 +1,12 @@
+'''
+
+The Pin and Component classes inherit from SchItem.  If this module
+is imported, then the SchItem metaclass will wire the Component class
+into the SchItem class for dispatch.  It will also make SchItem.Pin
+reference the Pin class and SchItem.Component reference the component
+class.
+
+'''
 from .schitems import SchItem
 
 class Pin(SchItem, SchItem.PinOrLabel):
@@ -26,11 +35,14 @@ class Pin(SchItem, SchItem.PinOrLabel):
                 self.warn('Non-invisible pin on power component')
 
     def fracture(self):
+        ''' fracture() is used for busses.  Adding the method here
+            makes this work just like a label class for this purpose.
+        '''
         return [self,]
 
 class Component(SchItem, SchItem.Keepout):
 
-    virtual_component = False
+    virtual_component = False   # True for power pins
 
     def getxy(self, description, xoffset, yoffset):
         ''' Code to do this transcribed from:

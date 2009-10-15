@@ -95,5 +95,5 @@ class Line(Rectangle):
                 (x == self.endx and y == self.endy)
 
 class Point(Line):
-    ''' and, of course, a point is a really skinny line
+    ''' and, of course, a point is a really short line
     '''

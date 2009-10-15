@@ -1,4 +1,13 @@
 from .schitem import SchItem
+'''
+Classes based on SchItem for parsing and rendering header and
+trailer of .sch file.
+
+NOTE:  Header parsing is not complete, for the simple reason I
+haven't really needed it yet.  I just extract the minimum
+necessary  (all the information is stored as lines, just
+not parsed further).
+'''
 
 class EESchema(SchItem):
     @classmethod

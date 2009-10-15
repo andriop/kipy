@@ -1,3 +1,7 @@
+'''
+Classes based on SchItem for parsing and rendering
+top of .sch file.
+'''
 from .schitem import SchItem
 
 class SchFile(SchItem):

@@ -1,3 +1,19 @@
+'''
+
+These files are almost parseable by the Python configparser.
+
+Except -- the config parser does not handle configuration items
+at the start of the file before the first [xxx].
+
+So I had to build something anyway, so I made it more Pythonic --
+you can reference cfgfile.eeschema.library.foo, for example, to
+get:
+
+[eeschema/library]
+foo = xxx
+
+'''
+
 from kipy.utility import getint
 
 class _NotPresent(object):

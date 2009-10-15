@@ -1,3 +1,7 @@
+'''
+Classes based on SchItem for parsing and rendering simple entities
+inside a .sch file.
+'''
 from .schitem import SchItem
 
 class Text(SchItem):

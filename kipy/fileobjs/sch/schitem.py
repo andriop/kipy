@@ -1,3 +1,10 @@
+'''
+Main class for parsing and rendering .sch files.
+
+Uses a metaclass to force subclasses to insert
+themselves in the _by_keyword dictionary.
+
+'''
 from kipy.utility import MetaHelper
 
 class SchItem(object):
@@ -11,6 +18,8 @@ class SchItem(object):
 
     @classmethod
     def _classinit(cls, base):
+        ''' Called at class creation time by metaclass
+        '''
         if base is None:
             return
         classname = cls.__name__
