@@ -2,7 +2,7 @@
     Utility functions for Kicad python library
 '''
 from .fileaccess import FileAccess, getint
-from .istring import IndexedString
+from .istring import IndexedString, refdeslist
 
 class MetaHelper(type):
     '''  MetaHelper is to simplify the use of metaclasses for one useful case.
