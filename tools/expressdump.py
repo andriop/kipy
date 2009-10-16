@@ -1,4 +1,8 @@
 #!/usr/bin/env python2.6
+'''
+   Parse the schematic in the current project, and output a netlist
+   in ExpressPCB format.
+'''
 import os
 import find_kipy
 import kipy.project, kipy.parsesch, kipy.fileobjs.net.expresspcb

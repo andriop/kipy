@@ -230,7 +230,7 @@ class Text(LibDraw):
         pass  # Don't consider the text to be inside the boundary for now
 
 class TextField(LibDraw):
-    'F num name posx posy size orientation visible hjust vjust realname'
+    'F num value posx posy size orientation visible hjust vjust fieldname'
     InsideDraw = False # render before drawing object
     default = '0 none 0 0 60 H V'
     optional_default = 'C C'

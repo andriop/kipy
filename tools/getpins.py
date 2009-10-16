@@ -1,4 +1,14 @@
 #!/usr/bin/env python2.6
+
+'''
+    Usage:  From inside a KiCAD project directory, use getpins with
+            a component reference designator as the sole parameter:
+
+              xxxxx/kipy/tools/getpins.py U13
+
+     getpins will dump pin information to stdout.
+'''
+
 import os
 import sys
 import find_kipy
@@ -23,5 +33,8 @@ for net in sch.netinfo:
             name = ', '.join(others)
         pinlist.append((pin.pinnum, pin.pinname, name))
 
+print
+print refdes
 for pinnum, pinname, name in sorted(pinlist):
     print '%4s %-10s  %s' % (pinnum, pinname, name)
+print

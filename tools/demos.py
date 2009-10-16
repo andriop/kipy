@@ -1,4 +1,7 @@
 #!/usr/bin/env python2.6
+'''
+    Check the schematics of all the KiCAD demo projects
+'''
 import os
 import glob
 import traceback
