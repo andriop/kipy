@@ -7,6 +7,7 @@ reference the Pin class and SchItem.Component reference the component
 class.
 
 '''
+from ...utility import IndexedString
 from .schitems import SchItem
 
 class Pin(SchItem, SchItem.PinOrLabel):
@@ -70,14 +71,17 @@ class Component(SchItem, SchItem.Keepout):
         self.timestamp = timestamp
         self.variant = source.variant
         self.parttype = source.parttype
-        for path, ref, part in source.altref:
+
+        for path, refdes, subpart in source.altref:
             if path == timestamp:
-                self.refdes = ref
-                self.subpart = part
-                return
-        self.refdes, self.subpart = source.refdes, source.subpart
-        if self.refdes.startswith('#'):
+                break
+        else:
+            refdes, subpart = source.refdes, source.subpart
+        if refdes.startswith('#'):
             self.virtual_component = True
+
+        self.subpart = subpart
+        self.refdes = IndexedString(refdes)
 
     def findlibpart(self):
         libdict = self.page.libdict

@@ -1,5 +1,6 @@
 import textwrap
 from collections import defaultdict
+from ..utility import IndexedString
 from .graphics import parsesheet
 from .getnets import makenetlist
 
@@ -63,14 +64,14 @@ class ParseSchematic(object):
         warndict = defaultdict(list)
         for w in self.warnings:
             w1, w2 = w.split('\n',1)
-            warndict[w1].append(w2)
+            warndict[w1].append(IndexedString(w2.rstrip()))
 
         if not warndict:
             print "No warnings found"
             print
 
         for w, wlist in sorted(warndict.iteritems()):
-            wlist = sorted((x.rstrip() for x in wlist))
+            wlist.sort()
             stripped = [x.strip() for x in wlist]
             if max((len(x) for x in stripped)) <= 30:
                 wlist = textwrap.wrap(', '.join(stripped), initial_indent='     ', subsequent_indent='     ')

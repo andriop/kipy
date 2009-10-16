@@ -14,6 +14,8 @@ invisible pins, etc.
 import re
 from collections import defaultdict
 from .makenetgroups import makegroups
+from ..utility import IndexedString
+
 
 class NetInfo(object):
 
@@ -57,7 +59,7 @@ class NetInfo(object):
                         yield '+'
                     else:
                         yield '_'
-            return ''.join(id_parts(s))
+            return IndexedString(''.join(id_parts(s)))
 
         def rename(new, old):
             new = self.by_net_id[new]
