@@ -81,7 +81,16 @@ class F(Component):
         # F 0 "R7" H 2050 7350 60  0000 C CNN
         if f is not None:
             data = (i,) + tuple(f)
-            linelist.append('F %d "%s" %s %-3d %-3d %-3d %04d %s %s' % data)
+            fmt = 'F %d "%s" %s %-3d %-3d %-3d %04d %s %s'
+            if len(data) > 9:
+                fmt += ' "%s"'
+            try:
+                linelist.append(fmt % data)
+            except:
+                for line in linelist[-40:]:
+                    print line
+                print fmt, data
+                raise
 
 class num(Component):
     keyword = None

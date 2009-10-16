@@ -48,7 +48,7 @@ class FileAccess(str):
 
     def write(self, fdata):
         f = open(self, 'wb')
-        f.write(fdata)
+        f.write(str(fdata))
         f.close()
 
     def readlines(self):

@@ -15,6 +15,7 @@ class ParseSchematic(object):
             partdict[part.refdes.upper()].append(part)
 
         allpins = set()
+        bomparts = set()
 
         for refdes, parts in partdict.iteritems():
             if not refdes or refdes.endswith('?'):
@@ -23,16 +24,22 @@ class ParseSchematic(object):
                         part.warn('Unassigned reference designator')
                 continue
             if len(parts) > 1:
-                unit_count = parts[0].libpart.unit_count
-                info = sorted(((x.libpart, x.subpart, x.userinfo, x) for x in parts))
+                parts.sort(key=lambda x: (x.libpart, x.subpart, x.userinfo, x))
+
                 # All shared parts must have same underlying library part
-                ok = info[0][0] == info[-1][0]
+                ok = parts[0].libpart == parts[-1].libpart
+
                 # All shared parts must exactly form a complete unit
-                ok = ok and [x[1] for x in info] == range(1, unit_count + 1)
+                unit_count = parts[0].libpart.unit_count
+                unit_list = [x.subpart for x in parts]
+                ok = ok and unit_list == range(1, unit_count + 1)
+
                 if not ok:
                     self.warn('Reference designator %s -- expect %s unique subparts, got:\n          %s' %
                             (parts[0].refdes, unit_count, '\n          '.join(sorted((part.full_info for part in parts)))))
                     continue
+            if not parts[0].virtual_component:
+                bomparts.add(parts[0])
             pindict = defaultdict(set)
             for part in parts:
                 for pinnum, pin in part.pindict.iteritems():
@@ -50,7 +57,7 @@ class ParseSchematic(object):
                 automagic.sort()
                 if automagic[0][0] != automagic[-1][0]:
                     automagic[0][1].warn('Invisibly connected net different than %s' % automagic[-1][0])
-        return allpins
+        return allpins, bomparts
 
     def dumpwarnings(self):
         warndict = defaultdict(list)
@@ -102,7 +109,7 @@ class ParseSchematic(object):
         self.netinfo = makenetlist(allpartials, warnings)
 
         netpins = self.getnetpins(self.netinfo)
-        partpins = self.checkparts(allparts)
+        partpins, self.bomparts = self.checkparts(allparts)
 
         if not self.netinfo:
             self.warn('No netlist found')
