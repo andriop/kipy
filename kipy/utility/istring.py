@@ -9,7 +9,8 @@ class IndexedString(str):
     def __init__(self, *whatever):
         # Put the string itself into the key so that
         # 'xxx00' doesn't equal 'xxx0'
-        key = [int(x) if x.isdigit() else x for x in self._indexedsplitter()]
+        key = self._indexedsplitter()
+        key = [int(x) if x.isdigit() else x.upper() for x in key]
         key.append(str(self))
         self._key = key = tuple(key)
         self._hash = hash(key)
