@@ -58,7 +58,7 @@ class LibComponent(object):
             tokens = line.split()
             if tokens[0].startswith('F') and tokens[0][1:].isdigit():
                 tokens[0] = tokens[0][1:]
-                self.fields.append(LibDraw.TextField(tokens))
+                self.fields.append(LibDraw.TextField(tokens, line))
             else:
                 break
         while True:

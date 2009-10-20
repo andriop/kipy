@@ -236,3 +236,11 @@ class TextField(LibDraw):
     optional_default = 'C C'
     def _getprefix(self):
         return self._prefix
+
+    def __init__(self, tokens=(), line='', **kw):
+        if tokens[1].count('"') & 1:
+            parta, partb, partc = line[1:].split('"', 2)
+            tokens = parta.split()
+            tokens.append(partb)
+            tokens.extend(partc.split())
+        LibDraw.__init__(self, tokens, line, **kw)
