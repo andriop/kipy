@@ -114,17 +114,18 @@ class Component(SchItem, SchItem.Keepout):
         libinfo = self.findlibpart()
         if libinfo is None:
             boundary = [-200, -200, 200, 200]
+            suffix = ''
+            self.pindict = {}
         else:
             libpart, libfn = libinfo
             boundary = list(libpart.boundary(self.subpart, self.variant))
-
-        self.libpart, self.libfn = libpart, libfn
+            self.libpart, self.libfn = libpart, libfn
+            suffix = libpart.unit_count > 1 and chr(ord('A') + self.subpart - 1) or ''
 
         boundary[:2] = self.getxy('part boundary #1', *boundary[:2])
         boundary[2:] = self.getxy('part boundary #2', *boundary[2:])
 
         self.install(self.page, *boundary)
-        suffix = libpart.unit_count > 1 and chr(ord('A') + self.subpart - 1) or ''
         self.userinfo = 'Component %s %s%s' % (self.parttype, self.refdes, suffix)
 
         if libinfo is None:
