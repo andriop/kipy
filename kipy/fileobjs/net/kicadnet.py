@@ -74,14 +74,14 @@ class NetInfo(object):
             refdes = c.refdes
             assert by_refdes.setdefault(refdes, c) is c
             for pinnum, netname in c.pindict.iteritems():
-                by_netname[netname].add((refdes, pinnum))
+                by_netname[netname].add('%s.%s' % (refdes, pinnum))
         self.by_net = by_net = {}
         self.unconnected = tuple(sorted(by_netname.pop('?', ())))
         for netname, pininfo in by_netname.iteritems():
             names = set()
             if not netname.startswith('N-') or not netname[2:].isdigit():
                 names.add(netname)
-            by_net[tuple(sorted(pininfo))] = names
+            by_net[', '.join(sorted(pininfo))] = names
 
         for timestamp, components in by_timestamp.iteritems():
             if len(components) > 1:
@@ -97,7 +97,7 @@ class NetInfo(object):
             if line.startswith(' '):
                 line = line.split()
                 assert len(line) == 2
-                result[-1][-1].append(tuple(line))
+                result[-1][-1].append('%s.%s' % tuple(line))
             else:
                 line = line.split()
                 assert line[0].endswith('Net')
@@ -109,7 +109,7 @@ class NetInfo(object):
                 netnames = set(x for x in netnames if x)
                 result.append((netnames, []))
 
-        netdict = dict((tuple(sorted(pininfo)), netinfo) for netinfo, pininfo in result)
+        netdict = dict((', '.join(sorted(pininfo)), netinfo) for netinfo, pininfo in result)
         self.comparenets(netdict)
  
     def checkparsed(self, parsedinfo):
@@ -118,11 +118,11 @@ class NetInfo(object):
         netdict = {}
         for net in parsedinfo:
             names = set(net.names)
-            pins = [(str(x.component.refdes), str(x.pinnum)) for x in net.pins]
+            pins = ['%s.%s' % (x.component.refdes, x.pinnum) for x in net.pins]
             if len(pins) == 1:
                 p_unconnected.update(pins)
             else:
-                netdict[tuple(sorted(pins))] = names
+                netdict[', '.join(sorted(pins))] = names
         self.comparenets(netdict, 'netlist parsed from .sch file')
         if f_unconnected - p_unconnected:
             print "Unconnected pins only listed in net file: ", f_unconnected - p_unconnected
