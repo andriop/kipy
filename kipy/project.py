@@ -44,6 +44,7 @@ class Project(object):
         self.projfname = projfname
         self.topschfname = schfname
         self.cfgfile = cfgfile
+        self.netfn = projdir | projname + '.net'
 
         self.libdict = LibDict(self.cfgfile, projfname)
         self.schematic = SchDict(schfname)

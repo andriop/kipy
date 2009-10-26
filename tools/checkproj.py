@@ -13,6 +13,7 @@ import glob
 import find_kipy
 from kipy.project import Project
 from kipy.parsesch import ParseSchematic
+from kipy.fileobjs.net import kicadnet
 
 projfiles = sys.argv[1:]
 if projfiles:
@@ -32,7 +33,13 @@ for projfile in projfiles:
         print
         print projfile
         print
-    ParseSchematic(Project(projfile))
+    proj = Project(projfile)
+    sch = ParseSchematic(proj)
+    if not proj.netfn.exists:
+        print "Netlist file %s not found" % proj.netfn
+        continue
+    netlistf = kicadnet.NetInfo(proj.netfn)
+    netlistf.checkparsed(sch.netinfo)
 print
 
 #project.libdict.check_duplicates()
