@@ -1,3 +1,4 @@
+import sys
 from ..utility import FileAccess
 
 '''
@@ -6,16 +7,15 @@ Locations of KiCad stuff, by system.
 Unfortunately, there seems to be different places to store things,
 depending on distribution.
 
-MS Windows locations deferred -- I don't have a Windows system.
-
-But I do have two different linux boxes with different installs.
-
 Don't know if this is the best way to do things, but here it is.
 
 '''
 
+if sys.platform.startswith('win'):
+    kicad_root = FileAccess(r'c:\Program Files\KiCad\share')
+else:
+    kicad_root = FileAccess('/usr/local/kicad/share')
 
-kicad_root = FileAccess('/usr/local/kicad/share')
 if kicad_root.exists:
     kicad_demo_root = kicad_root.demos
 else:
