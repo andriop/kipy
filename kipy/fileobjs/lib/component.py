@@ -118,7 +118,7 @@ class LibComponent(object):
         '''
         dictindex = subpart, variant
         if dictindex not in self._boundaries:
-            xlist, ylist = [], []
+            xlist, ylist = [0], [0]
             subpart = 0, subpart
             variant = 0, variant
             for item in self.draw:
