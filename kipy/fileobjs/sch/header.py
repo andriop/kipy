@@ -14,14 +14,10 @@ class EESchema(SchItem):
     def subparse(cls, schpage, tokens, lineiterator):
         cls.checkstate(schpage, -1, 3)
         schpage.page_header = tokens
-        tokens = lineiterator.next()
-        assert tokens[0].startswith('LIBS:'), line
-        schpage.lib_info = tokens
 
     @staticmethod
     def render(schpage, linelist):
         linelist.append(schpage.page_header.linetext)
-        linelist.append(schpage.lib_info.linetext)
 
 class EELAYER(SchItem):
     @classmethod

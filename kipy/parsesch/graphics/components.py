@@ -77,7 +77,7 @@ class Component(SchItem, SchItem.Keepout):
                 break
         else:
             refdes, subpart = source.refdes, source.subpart
-        if refdes.startswith('#'):
+        if str(refdes).startswith('#'):
             self.virtual_component = True
 
         self.subpart = subpart
