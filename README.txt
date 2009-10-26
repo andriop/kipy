@@ -20,8 +20,8 @@ kipy
 
 Requirements:
 
-1) Linux (doesn't yet know windows path stuff)
-2) Python 2.6 (For now -- will eventually support 3.0 as well)
+1) Linux or Windows
+2) Python 2.5 or 2.6 (For now -- will eventually support 3.0 as well)
 
 Using kipy:
 
