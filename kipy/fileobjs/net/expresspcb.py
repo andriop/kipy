@@ -36,6 +36,9 @@ def fixpinnum(part, pinnum):
         return pinnum
     assert pinnum[0] in 'ABC' and pinnum[1:].isdigit(), (part, pinnum)
     index = int(pinnum[1:])
+    if part == 'FX2':
+        assert 1 <= index <= 50, (part, pinnum)
+        return 'AB'.index(pinnum[0]) * 50 + index
     assert 1 <= index <= 32, (part, pinnum)
     return 'ABC'.index(pinnum[0]) * 32 + index
 
@@ -65,6 +68,8 @@ def dumpnet(netinfo, fileobj=None):
         startconn = len(connectiontable) + 1
         if not isinstance(name, str):
             name = ' '.join(sorted('%s.%s' % x for x in pininfo))
+        if name.startswith('_'):
+            name = '-' + name[1:]
 
         nettable.append('"%s (%d pins)" %d' % (name, len(pininfo), startconn))
         nextconn = range(startconn+1, startconn + len(pininfo)) + [0]
