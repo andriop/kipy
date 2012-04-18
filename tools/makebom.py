@@ -59,7 +59,7 @@ def buildparts(sch):
                 base = other.fields.copy()
                 base.update(self.fields)
                 self.fields.update(base)
-            if self.footprint in set(['0805']):
+            if self.footprint in set(['0805', '0603', '0402', '0201']):
                 parttype = self.parttype, self.value, self.footprint
             else:
                 parttype = self.parttype, self.value
@@ -120,7 +120,7 @@ def getbom(parts):
 
         def fixC(self):
             if not self.info:
-                self.info = 'CAP CER %suF 25V 0603 X7R' % self.value
+                self.info = 'CAP CER %s%s 25V 0603 X7R' % (self.value, not self.value[-1:].isalpha and 'uF' or '')
 
         def fixLEDX(self):
             self.info = 'THT Red LED T 1.75'
@@ -158,7 +158,7 @@ def getbom(parts):
         def __init__(self, info):
             self.__dict__.update((x.lower(), y) for (x,y) in info.iteritems())
             getattr(self, 'fix' + self.parttype, self.generic)()
-            self.numparts = (0, len(self.refdes))[self.footprint != 'DNS']
+            self.numparts = (0, len(self.refdes))[self.footprint != 'DNS' and self.value != 'DNS']
             self.refdes = refdeslist(self.refdes)
 
         def sortorder(self):
