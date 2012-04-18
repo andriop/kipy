@@ -120,7 +120,7 @@ def getbom(parts):
 
         def fixC(self):
             if not self.info:
-                self.info = 'CAP CER %s%s 25V 0603 X7R' % (self.value, not self.value[-1:].isalpha and 'uF' or '')
+                self.info = 'CAP CER %s%s 25V 0603 X7R' % (self.value, not self.value[-1:].isalpha() and ' uF' or '')
 
         def fixLEDX(self):
             self.info = 'THT Red LED T 1.75'
