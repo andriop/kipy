@@ -38,7 +38,7 @@ class Descr(SchItem):
     @classmethod
     def subparse(cls, schpage, tokens, lineiterator):
         cls.checkstate(schpage, 2, 1)
-        schpage.dimx, schpage.dimy = tokens[2:]
+        schpage.dimx, schpage.dimy = tokens[2:4]
         schpage.descr = [tokens]
         for tokens in lineiterator:
             schpage.descr.append(tokens)
