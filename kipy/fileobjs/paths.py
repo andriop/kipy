@@ -21,6 +21,8 @@ if kicad_root.exists:
 else:
     kicad_root = FileAccess('/usr/share/kicad')
     kicad_demo_root = kicad_root[-1].doc.kicad.demos
+    if not kicad_demo_root.exists:
+        kicad_demo_root = kicad_root.demos
 
 kicad_lib_root = kicad_root.library
 kicad_default_project = kicad_root.template.kicad + '.pro'

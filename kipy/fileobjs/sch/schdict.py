@@ -19,7 +19,7 @@ class SheetInstantiation(object):
 
         if parent is not None:
             sheetname = parent.sheetname + namesep + sheetname
-            timestamp = parent.timestamp + '/' + timestamp
+            timestamp = parent.timestamp + '/' + str(timestamp)
 
         if sheetname in database:
             raise SystemExit('Sheet %s in database multiple times' % sheetname)
